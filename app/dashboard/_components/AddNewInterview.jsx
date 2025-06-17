@@ -19,6 +19,7 @@ import moment from "moment"
 
 import { MockInterview } from "@/utils/schema"
 import { db } from "@/utils/db.js" // adjust path to your actual DB export
+import { useRouter } from "next/navigation"
 
 const AddNewInterview = () => {
   const [openDialog, setOpendialog] = useState(false)
@@ -28,7 +29,7 @@ const AddNewInterview = () => {
   const [loading, setloading] = useState(false)
   const [JsonResponse, setJsonResponse] = useState()
   const { user } = useUser()
-
+  const router = useRouter()
   const onSubmit = async (event) => {
     setloading(true)
     event.preventDefault()
@@ -75,6 +76,7 @@ const AddNewInterview = () => {
       console.log("Inserted id:", resp)
       if (resp) {
         setOpendialog(false)
+        router.push("/dashboard/interview/" + resp[0].mockId)
       }
     } else {
       console.log("error")
