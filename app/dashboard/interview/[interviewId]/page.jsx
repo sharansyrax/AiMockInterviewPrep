@@ -13,7 +13,7 @@ const Interview = ({ params }) => {
   const [webCamEnabled, setwebCamEnabled] = useState(false)
 
   useEffect(() => {
-    // console.log(params.interviewId)
+    console.log(params.interviewId)
     GetInterviewDetails()
   }, [])
   //used to get interview details by mockId
