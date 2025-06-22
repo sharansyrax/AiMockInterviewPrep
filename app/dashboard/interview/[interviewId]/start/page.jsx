@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react"
 import { db } from "@/utils/db"
 import { MockInterview } from "@/utils/schema"
 import { eq } from "drizzle-orm"
+import QuestionSection from "./_components/QuestionSection"
 const StartInterview = ({ params }) => {
   const [interviewData, setInterviewData] = useState()
-  const [MockInterviewQuestion, setMockInterviewQuestion] = useState()
+  const [mockInterviewQuestion, setMockInterviewQuestion] = useState()
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
   const GetInterviewDetails = async () => {
     const result = await db
       .select()
@@ -19,7 +21,14 @@ const StartInterview = ({ params }) => {
   useEffect(() => {
     GetInterviewDetails()
   }, [])
-  return <div className="grid grid-cols-1 md:grid-cols-2"></div>
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2">
+      <QuestionSection
+        mockInterviewQuestion={mockInterviewQuestion}
+        activeQuestionIndex={activeQuestionIndex}
+      ></QuestionSection>
+    </div>
+  )
 }
 
 export default StartInterview
