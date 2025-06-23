@@ -112,9 +112,7 @@ const AddNewInterview = () => {
                       required
                       className="my-3"
                       placeholder="Enter your job role "
-                      onChange={(event) =>
-                        setJobDescription(event.target.value)
-                      }
+                      onChange={(event) => setJobPosition(event.target.value)}
                     ></Input>
                   </div>
                   <div className="my-3">
@@ -123,7 +121,9 @@ const AddNewInterview = () => {
                       required
                       className="my-3"
                       placeholder="Ex. html/css/js "
-                      onChange={(event) => setJobPosition(event.target.value)}
+                      onChange={(event) =>
+                        setJobDescription(event.target.value)
+                      }
                     ></Textarea>
                   </div>
                   <div className="mt-7 my-4">
@@ -153,7 +153,7 @@ const AddNewInterview = () => {
                     {loading ? (
                       <>
                         <LoaderCircle className="animate-spin" />
-                        'Generating from AI..please wait'
+                        Generating from AI..please wait
                       </>
                     ) : (
                       "Start Interview"
