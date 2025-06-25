@@ -1,13 +1,20 @@
 import { Lightbulb } from "lucide-react"
 import React, { useState } from "react"
+import { Volume2 } from "lucide-react"
 
 const QuestionSection = ({ mockInterviewQuestion, activeQuestionIndex }) => {
-  const [activequestion, setactiveQuestion] = useState(activeQuestionIndex || 0)
+  const [activequestion, setactiveQuestion] = useState(activeQuestionIndex || 1)
+  const textToSpeech = (text) => {
+    if ("speechSynthesis" in window) {
+      const speech = new SpeechSynthesisUtterance(text)
+      window.speechSynthesis.speak(speech)
+    }
+  }
 
   console.log("the questions are ", mockInterviewQuestion)
   return (
     mockInterviewQuestion && (
-      <div className="my-2 px-3 py-5 border rounded-lg">
+      <div className="my-10 px-3 py-5 border rounded-lg">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {mockInterviewQuestion &&
             mockInterviewQuestion.map((question, index) => {
@@ -29,8 +36,14 @@ const QuestionSection = ({ mockInterviewQuestion, activeQuestionIndex }) => {
         <h2 className="my-5 text-md md:text-lg">
           {mockInterviewQuestion[activequestion - 1]?.question}
         </h2>
+        <Volume2
+          className="bg-secondary"
+          onClick={() =>
+            textToSpeech(mockInterviewQuestion[activequestion - 1]?.question)
+          }
+        ></Volume2>
 
-        <div className="border rounded-lg p-5 bg-black-100 mt-10">
+        <div className="border rounded-lg p-5 bg-black-100 mt-30 bg-secondary">
           <h2 className="flex gap-2 items-center text-black-700">
             <Lightbulb></Lightbulb> <strong>Note:</strong>
           </h2>
