@@ -11,7 +11,7 @@ const QuestionSection = ({ mockInterviewQuestion, activeQuestionIndex }) => {
     }
   }
 
-  console.log("the questions", mockInterviewQuestion)
+  console.log("the questions are", mockInterviewQuestion)
   return (
     mockInterviewQuestion && (
       <div className="my-10 px-3 py-5 border rounded-lg">
