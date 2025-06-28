@@ -28,6 +28,7 @@ const RecordAnswerSection = ({
     results,
     startSpeechToText,
     stopSpeechToText,
+    setResults,
   } = useSpeechToText({
     continuous: true,
     useLegacyResults: false,
@@ -38,57 +39,68 @@ const RecordAnswerSection = ({
     setUserAnswer(transcript)
   }, [results])
 
-  const saveAnswer = async () => {
+  useEffect(() => {
+    if (!isRecording && userAnswer.length > 10) {
+      updateUserAnswerInDb()
+    }
+    // if (userAnswer?.length < 10) {
+    //   setLoadingState(false)
+    //   toast.error("Error while saving your answer. Please record again")
+    //   return
+    // }
+  }, [userAnswer])
+  const startStopRecording = async () => {
     if (isRecording) {
-      setLoadingState(true)
       stopSpeechToText()
-      if (userAnswer?.length < 10) {
-        setLoadingState(false)
-        toast.error("Error while saving your answer. Please record again")
-        return
-      }
-
-      const feedbackPrompt =
-        "Question is " +
-        mockInterviewQuestion[activeQuestionIndex]?.question +
-        " and users recorded answer is " +
-        userAnswer +
-        "can you give him a valid usefull feedback rating for answer and area of improvement " +
-        " so that he can prepare well for future interviews in 3-5 lines in JSON format with " +
-        "rating and feedback field "
-      const url = "/api/geminiapi"
-
-      console.log("🔗 Fetching from URL:", window.location.origin + url)
-
-      const res = await fetch("/api/geminiapi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ InputPrompt: feedbackPrompt }),
-      })
-      const data = await res.json()
-      const MockResponse = data.result.replace("```json", "").replace("```", "")
-
-      console.log(data.result)
-      console.log(interviewData)
-      const JsonFeedbackResp = JSON.parse(MockResponse)
-
-      const resp = await db.insert(UserAnswer).values({
-        mockIdRef: interviewData?.mockId,
-        question: mockInterviewQuestion[activeQuestionIndex]?.question,
-        correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: userAnswer,
-        feedback: JsonFeedbackResp?.feedback,
-        rating: JsonFeedbackResp?.rating,
-        userEmail: user?.primaryEmailAddress?.emailAddress,
-        createdAt: moment().format("DD-MM-YYYY"),
-      })
-      if (resp) {
-        toast("User answer recorded successfully")
-      }
-      setLoadingState(false)
     } else {
       startSpeechToText()
     }
+  }
+
+  const updateUserAnswerInDb = async () => {
+    console.log(userAnswer)
+    setLoadingState(true)
+    const feedbackPrompt =
+      "Question is " +
+      mockInterviewQuestion[activeQuestionIndex]?.question +
+      " and users recorded answer is " +
+      userAnswer +
+      "can you give him a valid usefull feedback rating for answer and area of improvement " +
+      " so that he can prepare well for future interviews in 3-5 lines in JSON format with " +
+      "rating and feedback field "
+    const url = "/api/geminiapi"
+
+    console.log("🔗 Fetching from URL:", window.location.origin + url)
+
+    const res = await fetch("/api/geminiapi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ InputPrompt: feedbackPrompt }),
+    })
+    const data = await res.json()
+    const MockResponse = data.result.replace("```json", "").replace("```", "")
+
+    console.log(data.result)
+    console.log(interviewData)
+    const JsonFeedbackResp = JSON.parse(MockResponse)
+
+    const resp = await db.insert(UserAnswer).values({
+      mockIdRef: interviewData?.mockId,
+      question: mockInterviewQuestion[activeQuestionIndex]?.question,
+      correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
+      userAns: userAnswer,
+      feedback: JsonFeedbackResp?.feedback,
+      rating: JsonFeedbackResp?.rating,
+      userEmail: user?.primaryEmailAddress?.emailAddress,
+      createdAt: moment().format("DD-MM-YYYY"),
+    })
+    if (resp) {
+      toast("User answer recorded successfully")
+      setUserAnswer("")
+      setResults([])
+    }
+    setResults([])
+    setLoadingState(false)
   }
   return (
     <div className="flex items-center justify-center  flex-col">
@@ -112,7 +124,7 @@ const RecordAnswerSection = ({
         disable={loadingState}
         variant="outline"
         className="my-10"
-        onClick={saveAnswer}
+        onClick={startStopRecording}
       >
         {isRecording ? (
           <h2 className="text-red-500 flex gap-2">
@@ -120,11 +132,11 @@ const RecordAnswerSection = ({
           </h2>
         ) : (
           <h2 className="text-gray flex gap-2">
-            <Mic></Mic>start Recording....
+            <Mic></Mic>Start Recording!!
           </h2>
         )}
       </Button>
-      <Button onClick={() => console.log(userAnswer)}>Show</Button>
+      {/* <Button onClick={() => console.log(userAnswer)}>Show</Button> */}
     </div>
   )
 }
