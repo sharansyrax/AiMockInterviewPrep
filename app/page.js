@@ -10,12 +10,12 @@ export default function Home() {
         Please sign in or sign up to continue
       </p>
       <div className="flex gap-4">
-        <Link href="/sign-in">
-          <Button>Sign In</Button>
-        </Link>
-        <Link href="/sign-up">
-          <Button variant="outline">Sign Up</Button>
-        </Link>
+        <Button asChild>
+          <Link href="/sign-in">Sign In</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/sign-up">Sign Up</Link>
+        </Button>
       </div>
     </div>
   )
