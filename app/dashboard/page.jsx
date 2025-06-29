@@ -10,9 +10,10 @@ const Dashboard = () => {
       <h2 className="text-gray-500">
         Create and start your Ai Mock Interview prep
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 my-5">
+      <div>
         <AddNewInterview></AddNewInterview>
       </div>
+
       <InterviewList></InterviewList>
     </div>
   )
