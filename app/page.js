@@ -11,11 +11,11 @@ export default function Home() {
         <h1 className="text-4xl sm:text-5xl font-bold">
           Welcome to InterviewPrep.AI
         </h1>
-        <p className="text-lg sm:text-xl text-blue-400">
+        <p className="text-lg sm:text-xl text-gray-400">
           Sharpen your skills with AI-generated mock interviews
         </p>
         <Button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg transition"
+          className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg transition"
           onClick={() => router.push("/dashboard")}
         >
           Go to Dashboard
